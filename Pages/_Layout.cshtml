@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speedy SPA</title>
+    @* Load Turbo globally *@
+    <script src="https://unpkg.com/@@hotwired/turbo"></script>
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@@shoelace-style/shoelace@2.0.0-beta.43/dist/themes/base.css">
+    @* Load Shoelace Web Component Library *@
+    <script type="module"
+        src="https://cdn.jsdelivr.net/npm/@@shoelace-style/shoelace@2.0.0-beta.43/dist/shoelace.js"></script>
+
+    <style>
+        :not(:defined) {
+            visibility: hidden;
+        }
+    </style>
+    <!-- According to hotwire you should put scripts on the head if you want to cache them
+         otherwise they will be loaded with the body every time a page is fetched -->
+    <script src="/components.js" type="module" defer async></script>
+</head>
+
+<body>
+    @RenderBody()
+</body>
+
+</html>
