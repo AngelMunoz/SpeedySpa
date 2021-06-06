@@ -13,12 +13,14 @@ open FSharp.Control.Tasks
 open RazorLight
 open System.Collections.Generic
 
+// Load RazorLignt just to show the idea
 let razorEngine =
     RazorLightEngineBuilder()
         .UseFileSystemProject(Path.Combine(Environment.CurrentDirectory, "Pages"))
         .UseMemoryCachingProvider()
         .Build()
 
+/// This is the normal page stuff, an indes file which is compiled then rendered
 let Index : HttpHandler =
     fun ctx ->
         task {
@@ -27,6 +29,9 @@ let Index : HttpHandler =
             return! Response.ofHtmlString (result) ctx
         }
 
+/// This page is different (it's still HTML and all of that) instead of loading the whole
+/// layout with it, we just need to load a partial so we'd send JSON normaly here we send the HTML
+/// as the one we'd like to see rendered already
 let UpdatableFragment : HttpHandler =
     fun ctx ->
         task {
