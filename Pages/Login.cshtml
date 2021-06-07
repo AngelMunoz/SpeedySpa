@@ -1,0 +1,33 @@
+@model SpeedySpa.Types.AuthFormViewModel
+@{
+    Layout = "_Layout";
+}
+
+<article class="page">
+    <header>
+        <h1>Welcome to this example</h1>
+    </header>
+    <sl-tab-group>
+        <sl-tab slot="nav" panel="login">Sign in</sl-tab>
+        <sl-tab slot="nav" panel="signup">Sign up</sl-tab>
+        <sl-tab-panel name="login">
+            @{
+                await IncludeAsync("Fragments/LoginForm.cshtml", @Model);
+            }
+        </sl-tab-panel>
+        <sl-tab-panel name="signup">
+            @{
+                await IncludeAsync("Fragments/SignupForm.cshtml", @Model);
+            }
+        </sl-tab-panel>
+    </sl-tab-group>
+</article>
+
+<style>
+    .page {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+</style>

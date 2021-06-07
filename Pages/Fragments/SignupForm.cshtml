@@ -1,0 +1,54 @@
+@model SpeedySpa.Types.AuthFormViewModel
+<form name="signupForm" hx-post="/auth/signup" hx-target="[name=signup]" _="
+    on submit 
+        add @@disabled to .submit-btn-signup
+        add @@loading to .login-btn
+    end">
+    @if (!(@Model is null) && @Model.errors.ContainsKey("GeneralError"))
+    {
+        <p>@Model.errors["GeneralError"]</p>
+    }
+    <input type="hidden" name="__RequestVerificationToken" value="@Model.csrfToken" />
+    <fieldset class="flex one">
+        <label for="name">
+            Name
+            <input type="text" name="name" id="name" placeholder="Mike Perez">
+            @if (!(@Model is null) && @Model.errors.ContainsKey("name"))
+            {
+                <span class="form-error">@Model.errors["name"]</span>
+            }
+        </label>
+        <label for="sEmail">
+            Email
+            <input type="email" name="email" id="sEmail" placeholder="email@domain.com">
+            @if (!(@Model is null) && @Model.errors.ContainsKey("email"))
+            {
+                <span class="form-error">@Model.errors["email"]</span>
+            }
+        </label>
+        <label for="sPassword">
+            Password
+            <input type="password" name="password" id="sPassword" placeholder="my super secret password !#99027^%&Ujc">
+            @if (!(@Model is null) && @Model.errors.ContainsKey("password"))
+            {
+                <span class="form-error">@Model.errors["password"]</span>
+            }
+        </label>
+        <label for="sPasswordRepeated">
+            Again please, password
+            <input type="password" name="passwordRepeated" id="sPasswordRepeated"
+                placeholder="my super secret password !#99027^%&Ujc">
+            @if (!(@Model is null) && @Model.errors.ContainsKey("password"))
+            {
+                <span class="form-error">@Model.errors["password"]</span>
+            }
+        </label>
+    </fieldset>
+    <fieldset class="flex two">
+        <button type="submit" class="submit-btn-signup">Sign up</button>
+        <sl-button type="text" class="login-btn"
+            _="on click js document.querySelector('sl-tab-group').show('login') end">
+            Sign in
+        </sl-button>
+    </fieldset>
+</form>

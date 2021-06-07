@@ -1,12 +1,6 @@
+@model bool
 @{
     Layout = "_Layout";
 }
 
-<h1>This is static</h1>
-
-@* The turbo frame will be loaded when the response returns another
-    turbo-frame with the same id (check Fragments/UpdatableFragment.cshtml) *@
-<turbo-frame id="updatable-fragment">
-    <h1>This is an "updatable" segment</h1>
-    <a href="/html/updatable-fragment">Update me</a>
-</turbo-frame>
+Home

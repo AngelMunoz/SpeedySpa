@@ -7,25 +7,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Speedy SPA</title>
     @* Load Turbo globally *@
-    <script src="https://unpkg.com/@@hotwired/turbo"></script>
-    <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/@@shoelace-style/shoelace@2.0.0-beta.43/dist/themes/base.css">
+    <script src="https://unpkg.com/htmx.org"></script>
+    <script src="https://unpkg.com/hyperscript.org"></script>
+
     @* Load Shoelace Web Component Library *@
-    <script type="module"
-        src="https://cdn.jsdelivr.net/npm/@@shoelace-style/shoelace@2.0.0-beta.43/dist/shoelace.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@shoelace-style/shoelace/dist/themes/base.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic@6.5.5/picnic.min.css"
+        integrity="sha256-CBnbiPQogodXMdZxPaWpmf+JdiMIky+FP31RLT0L9h4=" crossorigin="anonymous">
+    <link rel="stylesheet" href="/index.css">
 
     <style>
+        /* Hide web component stuff untill it loads */
         :not(:defined) {
             visibility: hidden;
         }
     </style>
-    <!-- According to hotwire you should put scripts on the head if you want to cache them
-         otherwise they will be loaded with the body every time a page is fetched -->
-    <script src="/components.js" type="module" defer async></script>
+    <script src="/imports.js" type="module" async></script>
+    <script src="/htmx-specific.js" type="module"></script>
 </head>
 
 <body>
-    @RenderBody()
+    <sl-progress-bar indeterminate id="global-progress" hidden></sl-progress-bar>
+
+    @RenderSection("Header", required: false)
+    <main>
+        @RenderBody()
+    </main>
+    @RenderSection("Footer", required: false)
+
+    @RenderSection("Scripts", required: false)
 </body>
 
 </html>

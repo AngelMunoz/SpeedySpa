@@ -1,0 +1,37 @@
+@model SpeedySpa.Types.AuthFormViewModel
+<form name="loginForm" hx-post="/auth/login" hx-target="[name=login]" _="
+    on submit 
+        add @@disabled to .submit-btn
+        add @@loading to .signup-btn
+    end">
+    @if (!(@Model is null) && @Model.errors.ContainsKey("GeneralError"))
+    {
+        <p>@Model.errors["GeneralError"]</p>
+    }
+    <input type="hidden" name="__RequestVerificationToken" value="@Model.csrfToken" />
+    <fieldset class="flex one">
+        <label for="lEmail">
+            Email
+            <input type="email" name="email" id="lEmail" placeholder="email@domain.com">
+            @if (!(@Model is null) && @Model.errors.ContainsKey("email"))
+            {
+                <span class="form-error">@Model.errors["email"]</span>
+            }
+        </label>
+        <label for="lPassword">
+            Password
+            <input type="password" name="password" id="lPassword" placeholder="my super secret password !#99027^%&Ujc">
+            @if (!(@Model is null) && @Model.errors.ContainsKey("password"))
+            {
+                <span class="form-error">@Model.errors["password"]</span>
+            }
+        </label>
+    </fieldset>
+    <fieldset class="flex two">
+        <button type="submit" class="submit-btn">Sign in</button>
+        <sl-button type="text" class="signup-btn"
+            _="on click js document.querySelector('sl-tab-group').show('signup') end">
+            Sign up
+        </sl-button>
+    </fieldset>
+</form>
