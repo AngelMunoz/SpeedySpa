@@ -1,4 +1,4 @@
-module SpedySpa.Services
+module SpeedySpa.Services
 
 open System
 open System.IO
@@ -15,14 +15,12 @@ open Mondocks.Aggregation
 open Mondocks.Types
 
 open SpeedySpa.Types
+open SpeedySpa.Types.ServiceTypes
 open SpeedySpa.Database
-open System.Collections.Generic
+open FsToolkit.ErrorHandling
 
-
-[<Interface>]
-type TemplateProvider =
-
-    abstract member getTemplate<'T> : string * 'T option -> Task<string>
+open type BCrypt.Net.BCrypt
+open System.Text.RegularExpressions
 
 let tplEngine =
     lazy
@@ -45,6 +43,7 @@ let tplProvider =
 
                 return result
             } }
+
 
 [<RequireQualifiedAccess>]
 module Users =
@@ -109,10 +108,56 @@ module Users =
     let TryCreate (user: SignupPayload) : Task<Option<User>> =
         task {
             let! result =
-                database.Value.RunCommandAsync<InsertResult>(JsonCommand(insert UsersColName { documents [ user ] }))
+                let cmd =
+                    insert UsersColName { documents [ user ] }
+
+                database.Value.RunCommandAsync<InsertResult>(JsonCommand(cmd))
 
             if result.n > 0 && result.ok = 1.0 then
                 return! TryFindByEmail user.email
             else
                 return None
+        }
+
+    let CanLogin (user: LoginPayload) : Task<bool> =
+        task {
+            match! TryFindByEmailWithPassword user.email with
+            | Some found -> return EnhancedVerify(user.password, found.password)
+            | None -> return false
+        }
+
+    let TrySignup (user: SignupPayload) : Task<Result<User, SignupError>> =
+        taskResult {
+            do!
+                Exists user.email
+                |> TaskResult.requireFalse SignupError.AlreadyExists
+
+            let pwregex =
+                Regex("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$")
+
+            do!
+                user.name
+                |> Result.requireNotEmpty (SignupError.MissingField("name", "Name must not be empty"))
+
+            do!
+                user.email
+                |> Result.requireNotEmpty (SignupError.MissingField("email", "Email must not be empty"))
+
+            do!
+                user.password
+                |> pwregex.IsMatch
+                |> Result.requireTrue (
+                    SignupError.MissingField(
+                        "password",
+                        "The password must be at least 8 characters long and include a lower case and upper case letter"
+                    )
+                )
+
+            let! user =
+                TryCreate
+                    { user with
+                          password = EnhancedHashPassword user.password }
+                |> TaskResult.requireSome SignupError.CouldNotCreate
+
+            return user
         }

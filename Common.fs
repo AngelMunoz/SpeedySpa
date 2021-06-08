@@ -2,33 +2,45 @@
 module SpeedySpa.Common
 
 open Microsoft.AspNetCore.Http
+
+open FSharp.Control.Tasks
+
 open Falco
 
-let bindJsonError (error: string) =
-    Response.withStatusCode 400
-    >> Response.ofPlainText (sprintf "Invalid JSON: %s" error)
+open SpeedySpa.Types
+open SpeedySpa.Types.ServiceTypes
+open Microsoft.AspNetCore.Antiforgery
 
-
-/// Internal URLs
 [<RequireQualifiedAccess>]
 module Urls =
+
+    [<Literal>]
     let ``/`` = "/"
+
+    [<Literal>]
     let ``/auth/login`` = "/auth/login"
+
+    [<Literal>]
     let ``/auth/signup`` = "/auth/signup"
 
-[<RequireQualifiedAccess>]
-module Auth =
-    open Falco.Security
 
-    let requiresAuthentication (successHandler: HttpHandler) (failedAuthHandler: string -> HttpHandler) =
-        // let d = dict ( seq { "1", 2 })
-        // d.ContainsKey
-        fun (ctx: HttpContext) ->
-            if Auth.isAuthenticated ctx then
-                successHandler ctx
-            else
-                failedAuthHandler "Authentication Failed" ctx
+let csrfFailedHandler (route: RouteKind) (ctx: HttpContext) =
+    task {
+        let tpl = ctx.GetService<TemplateProvider>()
+        let antiforgery = ctx.GetService<IAntiforgery>()
+        let tokens = antiforgery.GetAndStoreTokens ctx
 
-    let failedAuthResponse (error: string) =
-        Response.withStatusCode 401
-        >> Response.ofJson {| message = $"Request failed to authenticate: [%s{error}]" |}
+        let vm =
+            { csrfToken = tokens.RequestToken
+              errors =
+                  [ "GeneralError", "Invalid Security Token In The Request, Please Try Again" ]
+                  |> Map.ofList }
+
+        let template =
+            match route with
+            | RouteKind.Login -> "Fragments/LoginForm.cshtml"
+            | RouteKind.Signup -> "Fragments/SignupForm.cshtml"
+
+        let! result = tpl.getTemplate (template, Some vm)
+        return! Response.ofHtmlString result ctx
+    }

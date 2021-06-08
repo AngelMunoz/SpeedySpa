@@ -1,4 +1,6 @@
-@model SpeedySpa.Types.AuthFormViewModel
+@using RazorLight
+@inherits TemplatePage<SpeedySpa.Types.AuthFormViewModel>
+
 <form name="loginForm" hx-post="/auth/login" hx-target="[name=login]" _="
     on submit 
         add @@disabled to .submit-btn

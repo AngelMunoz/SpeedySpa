@@ -1,4 +1,6 @@
-@model SpeedySpa.Types.AuthFormViewModel
+@using RazorLight
+@inherits TemplatePage<SpeedySpa.Types.AuthFormViewModel>
+
 <form name="signupForm" hx-post="/auth/signup" hx-target="[name=signup]" _="
     on submit 
         add @@disabled to .submit-btn-signup
@@ -36,7 +38,7 @@
         </label>
         <label for="sPasswordRepeated">
             Again please, password
-            <input type="password" name="passwordRepeated" id="sPasswordRepeated"
+            <input type="password" name="repeatPassword" id="sPasswordRepeated"
                 placeholder="my super secret password !#99027^%&Ujc">
             @if (!(@Model is null) && @Model.errors.ContainsKey("password"))
             {

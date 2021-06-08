@@ -1,4 +1,5 @@
-@model SpeedySpa.Types.AuthFormViewModel
+@using RazorLight
+@inherits TemplatePage<SpeedySpa.Types.AuthFormViewModel>
 @{
     Layout = "_Layout";
 }
@@ -29,5 +30,10 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
+    }
+
+    sl-tab-group {
+        margin-right: auto;
+        margin-left: auto;
     }
 </style>

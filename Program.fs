@@ -6,21 +6,14 @@ open System.IO
 open Falco
 open Falco.Routing
 open Falco.HostBuilder
+
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
-open Microsoft.Extensions.DependencyInjection
-open FSharp.Control.Tasks
-open RazorLight
-open System.Collections.Generic
-open System.Diagnostics
-open SpedySpa.Services
 open Microsoft.AspNetCore.Authentication.Cookies
+open Microsoft.Extensions.DependencyInjection
 
-let routes : HttpEndpoint list =
-    [ get Urls.``/`` Routes.getIndex
-      get Urls.``/auth/login`` Routes.getLogin
-      post Urls.``/auth/login`` Routes.postLogin
-      post Urls.``/auth/signup`` Routes.postSignup ]
+open SpeedySpa.Types.ServiceTypes
+open SpeedySpa.Services
 
 // ------------
 // Register services
@@ -68,7 +61,7 @@ let configureWebHost (endpoints: HttpEndpoint list) (webHost: IWebHostBuilder) =
 let main args =
     webHost args {
         configure configureWebHost
-        endpoints routes
+        endpoints Routes.routes
     }
 
     0
