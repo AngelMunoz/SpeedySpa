@@ -78,13 +78,7 @@ module Auth =
                 { csrfToken = tokens.RequestToken
                   errors = errors }
 
-            let! template =
-                let template =
-                    match route with
-                    | RouteKind.Login -> "Fragments/LoginForm.cshtml"
-                    | RouteKind.Signup -> "Fragments/SignupForm.cshtml"
-
-                tpl.getTemplate<AuthFormViewModel> (template, Some vm)
+            let! template = tpl.getTemplate<AuthFormViewModel> ("Login.cshtml", Some vm)
 
             return! Response.ofHtmlString template ctx
         }
@@ -101,7 +95,7 @@ module Auth =
                     { csrfToken = tokens.RequestToken
                       errors = Map.empty |> Map.add "email" "Invalid credentials" }
 
-                let! template = tpl.getTemplate<AuthFormViewModel> ("Fragments/LoginForm.cshtml", Some vm)
+                let! template = tpl.getTemplate<AuthFormViewModel> ("Login.cshtml", Some vm)
 
                 return! Response.ofHtmlString template ctx
             else
@@ -149,20 +143,28 @@ module Auth =
                               |> Map.ofList
                           | SignupError.MissingField (key, value) -> [ key, value ] |> Map.ofList }
 
-                let! template = tpl.getTemplate<AuthFormViewModel> ("Fragments/SignupForm.cshtml", Some vm)
+                let! template = tpl.getTemplate<AuthFormViewModel> ("Login.cshtml", Some vm)
 
                 return! Response.ofHtmlString template ctx
         }
 
+    let Logout (ctx: HttpContext) =
+        Response.signOutAndRedirect CookieAuthenticationDefaults.AuthenticationScheme Urls.``/auth/login`` ctx
+
     let LoginPage (tpl: TemplateProvider) (ctx: HttpContext) =
         task {
-            let antiforgery = ctx.GetService<IAntiforgery>()
-            let tokens = antiforgery.GetAndStoreTokens ctx
+            let isAuthenticated = Falco.Security.Auth.isAuthenticated ctx
 
-            let vm =
-                { csrfToken = tokens.RequestToken
-                  errors = Map.empty }
+            if isAuthenticated then
+                return! Response.redirect Urls.``/`` false ctx
+            else
+                let antiforgery = ctx.GetService<IAntiforgery>()
+                let tokens = antiforgery.GetAndStoreTokens ctx
 
-            let! index = tpl.getTemplate ("Login.cshtml", Some vm)
-            return! Response.ofHtmlString index ctx
+                let vm =
+                    { csrfToken = tokens.RequestToken
+                      errors = Map.empty }
+
+                let! index = tpl.getTemplate ("Login.cshtml", Some vm)
+                return! Response.ofHtmlString index ctx
         }

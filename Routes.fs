@@ -46,9 +46,11 @@ let postSignup : HttpHandler =
                 ctx)
         (csrfFailedHandler RouteKind.Signup)
 
+let getLogout : HttpHandler = Auth.Logout
 
 let routes : HttpEndpoint list =
     [ get Urls.``/`` getIndex
       get Urls.``/auth/login`` getLogin
+      get Urls.``/auth/logout`` getLogout
       post Urls.``/auth/login`` postLogin
       post Urls.``/auth/signup`` postSignup ]

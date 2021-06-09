@@ -3,6 +3,7 @@ namespace SpeedySpa.Types
 open MongoDB.Bson
 open MongoDB.Bson.Serialization.Attributes
 
+
 [<BsonIgnoreExtraElements>]
 type User =
     { _id: ObjectId
@@ -30,9 +31,17 @@ type SignupError =
 
 type PaginatedResult<'T> = { count: int; items: seq<'T> }
 
+
 [<Struct>]
 type PaginationParams = { page: int; limit: int }
 
+type NavLink = { displayName: string; href: string }
+
+type NavbarViewModel =
+    { links: NavLink ResizeArray
+      UserName: string option }
+
+type IndexViewModel = { nav: NavbarViewModel option }
 
 type AuthFormViewModel =
     { csrfToken: string

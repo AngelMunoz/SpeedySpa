@@ -1,7 +1,7 @@
 @using RazorLight
 @inherits TemplatePage<SpeedySpa.Types.AuthFormViewModel>
 
-<form name="signupForm" hx-post="/auth/signup" hx-target="[name=signup]" _="
+<form name="signupForm" hx-post="/auth/signup" hx-target="body" _="
     on submit 
         add @@disabled to .submit-btn-signup
         add @@loading to .login-btn
@@ -14,35 +14,36 @@
     <fieldset class="flex one">
         <label for="name">
             Name
-            <input type="text" name="name" id="name" placeholder="Mike Perez">
+            <input required type="text" name="name" id="name" placeholder="Mike Perez">
             @if (!(@Model is null) && @Model.errors.ContainsKey("name"))
             {
-                <span class="form-error">@Model.errors["name"]</span>
+                <span class="label error">@Model.errors["name"]</span>
             }
         </label>
         <label for="sEmail">
             Email
-            <input type="email" name="email" id="sEmail" placeholder="email@domain.com">
+            <input required type="email" name="email" id="sEmail" placeholder="email@domain.com">
             @if (!(@Model is null) && @Model.errors.ContainsKey("email"))
             {
-                <span class="form-error">@Model.errors["email"]</span>
+                <span class="label error">@Model.errors["email"]</span>
             }
         </label>
         <label for="sPassword">
             Password
-            <input type="password" name="password" id="sPassword" placeholder="my super secret password !#99027^%&Ujc">
+            <input required type="password" name="password" id="sPassword"
+                placeholder="my super secret password !#99027^%&Ujc">
             @if (!(@Model is null) && @Model.errors.ContainsKey("password"))
             {
-                <span class="form-error">@Model.errors["password"]</span>
+                <span class="label error">@Model.errors["password"]</span>
             }
         </label>
         <label for="sPasswordRepeated">
             Again please, password
-            <input type="password" name="repeatPassword" id="sPasswordRepeated"
+            <input required type="password" name="repeatPassword" id="sPasswordRepeated"
                 placeholder="my super secret password !#99027^%&Ujc">
             @if (!(@Model is null) && @Model.errors.ContainsKey("password"))
             {
-                <span class="form-error">@Model.errors["password"]</span>
+                <span class="label error">@Model.errors["password"]</span>
             }
         </label>
     </fieldset>

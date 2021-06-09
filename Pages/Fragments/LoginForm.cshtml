@@ -1,7 +1,7 @@
 @using RazorLight
 @inherits TemplatePage<SpeedySpa.Types.AuthFormViewModel>
 
-<form name="loginForm" hx-post="/auth/login" hx-target="[name=login]" _="
+<form name="loginForm" hx-post="/auth/login" hx-target="body" _="
     on submit 
         add @@disabled to .submit-btn
         add @@loading to .signup-btn
@@ -14,18 +14,19 @@
     <fieldset class="flex one">
         <label for="lEmail">
             Email
-            <input type="email" name="email" id="lEmail" placeholder="email@domain.com">
+            <input required type="email" name="email" id="lEmail" placeholder="email@domain.com">
             @if (!(@Model is null) && @Model.errors.ContainsKey("email"))
             {
-                <span class="form-error">@Model.errors["email"]</span>
+                <span class="label error">@Model.errors["email"]</span>
             }
         </label>
         <label for="lPassword">
             Password
-            <input type="password" name="password" id="lPassword" placeholder="my super secret password !#99027^%&Ujc">
+            <input required type="password" name="password" id="lPassword"
+                placeholder="my super secret password !#99027^%&Ujc">
             @if (!(@Model is null) && @Model.errors.ContainsKey("password"))
             {
-                <span class="form-error">@Model.errors["password"]</span>
+                <span class="label error">@Model.errors["password"]</span>
             }
         </label>
     </fieldset>

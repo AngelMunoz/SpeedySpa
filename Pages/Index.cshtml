@@ -1,6 +1,13 @@
-@model bool
+@using RazorLight
+@using Microsoft.FSharp.Core
+@inherits TemplatePage<SpeedySpa.Types.IndexViewModel>
 @{
     Layout = "_Layout";
+}
+
+@section Header {
+
+@{await IncludeAsync("Fragments/Navbar.cshtml", @Model.nav);}
 }
 
 Home

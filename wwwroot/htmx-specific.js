@@ -13,10 +13,3 @@ window.addEventListener(
         el.setAttribute("hidden", "");
     }
 );
-
-window.addEventListener(
-    "htmx:xhr:progress",
-    function onHtmxXhrProgress(event) {
-        console.log(event);
-    }
-);

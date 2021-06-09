@@ -5,3 +5,21 @@ html, body {
 #global-progress {
     --height: 3px
 }
+
+input {
+    margin: 0.5em;
+}
+
+input:focus:required:invalid,
+input:not(:placeholder-shown):invalid {
+    box-shadow: 3px 3px 2px 2px #e7adad 
+}
+
+input:required:valid {
+    box-shadow: 3px 3px 2px 2px #c2e7ad 
+}
+
+input:optional,
+input:required:placeholder-shown {
+    box-shadow: 3px 3px 2px 2px #f1f1f1 
+}

@@ -5,6 +5,7 @@ open FSharp.Control.Tasks
 
 open Falco
 open SpeedySpa
+open SpeedySpa.Types
 open SpeedySpa.Types.ServiceTypes
 
 
@@ -14,9 +15,9 @@ module Home =
         task {
             let isAuthenticated = Falco.Security.Auth.isAuthenticated ctx
 
-            if isAuthenticated |> not then
-                return! Response.redirect Urls.``/auth/login`` false ctx
-            else
-                let! index = tpl.getTemplate ("Index.cshtml", None)
+            if isAuthenticated then
+                let! index = tpl.getTemplate ("Index.cshtml", Some { nav = None })
                 return! Response.ofHtmlString index ctx
+            else
+                return! Response.redirect Urls.``/auth/login`` false ctx
         }

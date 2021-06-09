@@ -26,6 +26,7 @@ let configureServices (services: IServiceCollection) : unit =
         .AddCookie()
     |> ignore
 
+    services.AddAuthorization() |> ignore
     services.AddAntiforgery() |> ignore
 
 // ------------
@@ -45,6 +46,8 @@ let configureApp (endpoints: HttpEndpoint list) (ctx: WebHostBuilderContext) (ap
                     >> Response.ofPlainText "Server error"
                 )
         )
+        .UseAuthentication()
+        .UseAuthorization()
         .UseFalco(endpoints)
         .UseStaticFiles()
     |> ignore

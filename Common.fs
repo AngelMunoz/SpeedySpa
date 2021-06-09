@@ -21,6 +21,9 @@ module Urls =
     let ``/auth/login`` = "/auth/login"
 
     [<Literal>]
+    let ``/auth/logout`` = "/auth/logout"
+
+    [<Literal>]
     let ``/auth/signup`` = "/auth/signup"
 
 

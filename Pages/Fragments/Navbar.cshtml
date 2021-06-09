@@ -1,0 +1,32 @@
+@using RazorLight
+@using Microsoft.FSharp.Core
+@inherits TemplatePage<FSharpOption<SpeedySpa.Types.NavbarViewModel>>
+
+<nav class="main-navbar">
+    <sl-button href="/" type="text">Speedy Spa</sl-button>
+    <input id="bmenub" type="checkbox" class="show">
+    <label for="bmenub" class="burger pseudo button">
+        <sl-icon name="list"></sl-icon>
+    </label>
+
+    <div class="menu">
+        @if (OptionModule.IsSome(@Model))
+        {
+            @foreach (var link in @Model.Value.links)
+            {
+                <a hx-get="@link.href" hx-target="content">@link.displayName</a>
+            }
+        }
+        <sl-button href="/auth/logout" type="text">
+            <sl-icon name="door-open" slot="prefix"></sl-icon>
+            Log out
+        </sl-button>
+    </div>
+</nav>
+<style>
+    .main-navbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+</style>
